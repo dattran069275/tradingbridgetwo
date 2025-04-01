@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Login</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  <!-- <h1>Đăng nhập</h1> -->
+  <div id="loginForm">
+    <!-- <label for="username">Tên đăng nhập:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Mật khẩu:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <button id="loginButton">Đăng nhập</button> -->
+    <p id="currentNumber">Current Number: 0</p>
+    <input type="number" id="numberInput" placeholder="Enter a number">
+    <button onclick="updateNumber()">Update Number</button>
+  </div>
+  <div id="message"></div>
+
+  <!-- bang signal -->
+  <table id="CanhbaoTable">
+    <thead>
+        <tr>
+            <th>Số thứ tự</th>
+            <th>Tên</th>
+            <th>Trạng thái</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Dữ liệu sẽ được thêm vào đây -->
+    </tbody>
+</table>
+<h1>Tạo Cảnh Báo</h1>
+
+<button id="create-alert-button">Tạo Cảnh Báo Updated</button>
+
+<div id="alert-form">
+  <label for="alert-name">Tên Cảnh Báo 1:</label>
+  <input type="text" id="alert-name-1" name="alert-name-1">
+  <label for="alert-name">Tên Cảnh Báo 2:</label>
+  <input type="text" id="alert-name-2" name="alert-name-2">
+  <label for="LinkBuy">Link Buy:</label>
+  <input type="text" id="LinkBuy" name="LinkBuy">
+
+  <label for="LinkSell">Link Sell:</label>
+  <input type="text" id="LinkSell" name="LinkSell">
+
+  <div class="button-group">
+    <button id="save-alert-button">Lưu</button>
+    <button id="cancel-alert-button">Hủy</button>
+  </div>
+</div>
+
+
+<!--  links astro -->
+<!-- <h1>Update Links</h1>
+<div>
+  <label for="linkBuy">Link Buy:</label>
+  <input type="text" id="linkBuy" name="linkBuy">
+</div>
+
+<div>
+  <label for="linkSell">Link Sell:</label>
+  <input type="text" id="linkSell" name="linkSell">
+</div>
+<button onclick="updateLink()">Update Links</button> -->
+</body>
+
+<script>
+  // Code của bạn (sử dụng Socket.IO và các phần tử HTML)
+  const socket = io(); // Kết nối đến server
+
+  //const loginForm = document.getElementById('loginForm');
+  // const loginButton = document.getElementById('loginButton');
+  // const messageDiv = document.getElementById('message');
+
+  // loginButton.addEventListener('click', () => {
+  //   const username = document.getElementById('username').value;
+  //   const password = document.getElementById('password').value;
+
+  //   socket.emit('login', { username: username, password: password });
+  // });
+
+  // socket.on('loginSuccess', (data) => {
+  //   messageDiv.textContent = data.message;
+  //   messageDiv.style.color = 'green';
+  //   loginForm.style.display = 'none';
+  // });
+
+  // socket.on('loginFailed', (data) => {
+  //   messageDiv.textContent = data.message;
+  //   messageDiv.style.color = 'red';
+  // });
+
+  // socket.on('connect_error', (err) => {
+  //     messageDiv.textContent = 'Lỗi kết nối đến server. Vui lòng thử lại.';
+  //     messageDiv.style.color = 'red';
+  //     console.error(err);
+  // });
+
+  socket.on('currentNumber', (number) => {
+            document.getElementById('currentNumber').innerText = `Current Number: ${number}`;
+        });    
+        // Gửi giá trị số từ client tới server khi người dùng thay đổi
+        function updateNumber() {
+            const number = parseInt(document.getElementById('numberInput').value);
+            if (!isNaN(number)) {
+                socket.emit('updateNumber', number);  // Gửi số mới đến server
+            }
+        }
+  
+    
+    socket.on('currentLink',(linkBuy,linkSell)=>{
+      const linkBuyInput = document.getElementById('linkBuy');
+    const linkSellInput = document.getElementById('linkSell');
+    linkBuyInput.value=linkBuy;
+    linkSellInput.value=linkSell;
+    })
+    // ve bang tin hieu tu sever gui ve
+    socket.on('taoCanhBaoThanhCong', (data) => {
+      alert(`Đã lưu cảnh báo ${data}`);
+      alertForm.style.display = 'none'; // Ẩn form sau khi lưu
+    }); 
+    socket.on('receiveAllCanhBaoUpdated', (data) => {
+            const tableBody = document.querySelector('#CanhbaoTable tbody');
+            tableBody.innerHTML = ''; // Xóa nội dung bảng cũ
+
+            // Lặp qua dữ liệu và thêm từng dòng vào bảng
+            data.forEach((x, index) => {
+                const row = document.createElement('tr');
+                var id1=""+x._id;
+                row.innerHTML = `
+                    <td>${x.index}</td>
+                    <td>${x.canhBao1.name}</td>
+                    <td>${x.canhBao1.state}</td>
+                    <td>
+                        <button class="remove-btn" onclick="removeCanhBao('${id1}','${index}')">Remove</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                const rowCanhBao2 = document.createElement('tr');
+                var id2=""+x._id;
+                rowCanhBao2.innerHTML = `
+                    <td>Id: ${x._id}</td>
+                    <td>${x.canhBao2.name}</td>
+                    <td>${x.canhBao2.state}</td>
+                    <td>
+                     <button class="change-btn" onclick="resetState('${index}','${x._id}')">Reset Signal</button> 
+                    </td>
+                `;
+                tableBody.appendChild(rowCanhBao2);
+                const rowLinks = document.createElement('tr');
+                rowLinks.innerHTML = `
+                    <td></td>
+                    <td> link buy <input type="text" id='${x.link.linkBuy}' value='${x.link.linkBuy}'></td>
+                    <td> link sell <input type="text" id='${x.link.linkSell}' value='${x.link.linkSell}'></td>
+                    <td>
+                        <button type="button" class="change-btn" onclick="updateLinkNew('${x._id}','${x.link.linkBuy}','${x.link.linkSell}')">Update Link</button>
+                    </td>
+                `;
+            tableBody.appendChild(rowLinks);
+            });
+            
+        }); 
+        function changeCanhBao(index) {
+            alert(`Chỉnh sửa tại vị trí: ${index}`);
+            // Bạn có thể thêm mã để hiển thị form chỉnh sửa hoặc làm bất cứ hành động nào.
+        }
+
+        // Hàm để xử lý sự kiện Remove
+        function removeCanhBao(id,index) {
+           const confirmDelete = confirm(`Bạn có chắc chắn muốn xóa cảnh báo:${name}?`);
+
+            if (confirmDelete) {
+              socket.emit('deleteCanhBaoAndLink',id)
+                // Xử lý xóa học sinh tại index
+                alert(`Cảnh báo:${name} đã được xóa.`);
+                // Cập nhật lại dữ liệu bảng sau khi xóa (ở đây chỉ là một ví dụ)
+                // Giả sử bạn muốn xóa học sinh khỏi bảng mà không gửi lại dữ liệu từ server:
+                const tableBody = document.querySelector('#CanhbaoTable tbody');
+                const rows = tableBody.rows;
+                // Xóa dòng tại index
+                if (rows[index]) {
+                    tableBody.deleteRow(index);
+                    tableBody.deleteRow(index+1);
+                    tableBody.deleteRow(index+2);
+                }
+            } else {
+                alert("Hành động xóa bị hủy.");
+            }
+        }
+
+
+
+  const createAlertButton = document.getElementById('create-alert-button');
+  const alertForm = document.getElementById('alert-form');
+  const saveAlertButton = document.getElementById('save-alert-button');
+  const cancelAlertButton = document.getElementById('cancel-alert-button');
+
+  // Hiển thị form khi nút "Tạo Cảnh Báo" được nhấp
+  createAlertButton.addEventListener('click', () => {
+    alertForm.style.display = 'block';
+  });
+
+  // Ẩn form khi nút "Hủy" được nhấp
+  cancelAlertButton.addEventListener('click', () => {
+    alertForm.style.display = 'none';
+  });
+
+  // Xử lý khi nút "Lưu" được nhấp (bạn cần thêm logic để lưu dữ liệu)
+  saveAlertButton.addEventListener('click', () => {
+    const nameCB1 = document.getElementById('alert-name-1').value;
+    const nameCB2 = document.getElementById('alert-name-2').value;
+    const linkBuy = document.getElementById('LinkBuy').value;
+    const linkSell = document.getElementById('LinkSell').value;
+
+    // Ở đây bạn có thể làm những điều sau:
+    // 1. Hiển thị một thông báo cho người dùng (ví dụ, sử dụng alert() hoặc thêm một phần tử vào trang).
+    // 2. Gửi dữ liệu đến server (ví dụ, sử dụng fetch() hoặc XMLHttpRequest).
+    // 3. Lưu dữ liệu vào localStorage (trên trình duyệt của người dùng).
+
+    console.log('Tên cảnh báo 1:', nameCB1);
+    console.log('Tên cảnh báo 2:', nameCB2);
+    console.log('Link buy:', linkBuy);
+    console.log('Link sell:', linkSell);
+    //socket.emit('taoCanhBao', { name: alertName, buyMessage: buyMessage, sellMessage: sellMessage });
+    socket.emit('taoCanhBaoAndLink', { nameCB1: nameCB1,nameCB2: nameCB2,linkBuy:linkBuy,linkSell:linkSell });
+    alertForm.style.display = 'none'; // Ẩn form sau khi lưu
+  });
+
+
+  async function updateLinkNew(id,id1,id2) {
+
+    let linkValue;
+    let resultElement;
+    let nameToUpdate;
+    var linkBuy=document.getElementById(id1).value;
+    var linkSell=document.getElementById(id2).value;
+    if (!linkBuy&&!linkSell) {
+      alert("Please enter links");
+      return;
+    }
+    const url = "https://tradingbrige-production.up.railway.app/updateLink"; // Assuming your backend route
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "id":id,"linkBuy": linkBuy,"linkSell":linkSell }), // Send the link in the body
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Success:', data.message);
+        // resultElement.textContent = `Success: ${data.message}`;
+      } else {
+        console.error('Error:', data.message || 'An error occurred');
+        // resultElement.textContent = `Error: ${data.message || 'An error occurred'}`;
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      resultElement.textContent = 'Fetch error: ' + error;
+    }
+  }
+  async function resetState(index,id){
+    const url = "https://tradingbrige-production.up.railway.app/resetState"; // Assuming your backend route
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "id": id}), // Send the link in the body
+      });
+
+  
+
+      if (response.ok) {
+        // resultElement.textContent = `Success: ${data.message}`;
+      } else {
+        // resultElement.textContent = `Error: ${data.message || 'An error occurred'}`;
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      resultElement.textContent = 'Fetch error: ' + error;
+    }
+  }
+</script>
+</html>

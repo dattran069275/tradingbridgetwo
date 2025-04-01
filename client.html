@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Login</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>Đăng nhập</h1>
+  <div id="loginForm">
+    <label for="username">Tên đăng nhập:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Mật khẩu:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <button id="loginButton">Đăng nhập</button>
+  </div>
+  <div id="message"></div>
+</body>
+
+<script>
+  // Code của bạn (sử dụng Socket.IO và các phần tử HTML)
+  const socket = io(); // Kết nối đến server
+
+  const loginForm = document.getElementById('loginForm');
+  const loginButton = document.getElementById('loginButton');
+  const messageDiv = document.getElementById('message');
+
+  loginButton.addEventListener('click', () => {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    socket.emit('login', { username: username, password: password });
+  });
+
+  socket.on('loginSuccess', (data) => {
+    messageDiv.textContent = data.message;
+    messageDiv.style.color = 'green';
+    loginForm.style.display = 'none';
+  });
+
+  socket.on('loginFailed', (data) => {
+    messageDiv.textContent = data.message;
+    messageDiv.style.color = 'red';
+  });
+
+  socket.on('connect_error', (err) => {
+      messageDiv.textContent = 'Lỗi kết nối đến server. Vui lòng thử lại.';
+      messageDiv.style.color = 'red';
+      console.error(err);
+  });
+</script>
+</html>
