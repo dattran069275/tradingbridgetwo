@@ -140,7 +140,7 @@ async function createCanhBaoAndLink(nameCB1, nameCB2, linkBuy, linkSell) {
             linkBuy,
             linkSell
         });
-
+        console.log(`cb1.id, cb1.id, cb1.id ${cb1.id} ${cb1.id} ${newLink.id}`)
         const newCanhBaoAndLink = await CanhBaoAndLink.create({
             canhBao1Id: cb1.id, // Use the IDs of the created CanhBao instances
             canhBao2Id: cb2.id,
