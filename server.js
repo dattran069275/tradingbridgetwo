@@ -323,20 +323,34 @@ app.get('/allCanhBaos', async (req, res) => {
     }
 });
 
-app.get('/allCanhBaoUpdateds', async (req, res) => {
+//  **Chèn hàm fecthAllCanhBaoUpdated() vào đây**
+async function fecthAllCanhBaoUpdated(isEmit, req, res) {
     try {
-        const allCanhBaoUpdateds = await CanhBaoAndLink.findAll({
+        const allCanhBaoUpdated = await CanhBaoAndLink.findAll({
             include: [
                 { model: CanhBao, as: 'canhBao1' },
                 { model: CanhBao, as: 'canhBao2' },
                 { model: linkSchema },
             ],
-            order: [['index', 'ASC']]
+            order: [['index', 'ASC']] // Sắp xếp theo index
         });
-        res.json(allCanhBaoUpdateds.map(item => item.toJSON()));
+
+        if (isEmit) {
+            io.emit("receiveAllCanhBaoUpdated", allCanhBaoUpdated.map(item => item.toJSON())); // Gửi dữ liệu đã được serialize
+        } else {
+            res.json(allCanhBaoUpdated.map(item => item.toJSON())); // Gửi dữ liệu đã được serialize
+        }
     } catch (err) {
-        res.status(500).json({ message: 'Error fetching allCanhBaoUpdateds', error: err });
+        if (!isEmit) {
+            res.status(500).json({ message: 'Error fetching allCanhBaoUpdated', error: err });
+        } else {
+            console.error('Error fetching allCanhBaoUpdated (for emit):', err); // Log error for debugging
+        }
     }
+}
+
+app.get('/allCanhBaoUpdateds', async (req, res) => {
+    fecthAllCanhBaoUpdated(false, req, res);
 });
 
 function emitCurrentLink() {
