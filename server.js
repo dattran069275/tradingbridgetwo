@@ -144,7 +144,8 @@ async function createCanhBaoAndLink(nameCB1, nameCB2, linkBuy, linkSell) {
         const newCanhBaoAndLink = await CanhBaoAndLink.create({
             canhBao1Id: cb1.id, // Use the IDs of the created CanhBao instances
             canhBao2Id: cb2.id,
-            linkId: newLink.id,
+            linkId: 1,
+            cmm:"cmm"
         });
         console.log('Đã tạo cảnh báo và linknewCanhBaoAndLink :',newCanhBaoAndLink)
         console.log('Đã tạo cảnh báo và link:', newCanhBaoAndLink.toJSON());
