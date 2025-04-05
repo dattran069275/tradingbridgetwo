@@ -78,6 +78,18 @@ const CanhBaoAndLink = sequelize.define('CanhBaoAndLink', {
         primaryKey: true,
         autoIncrement: true // Auto-increment for index
     },
+    canhBao1Id: {
+        type: DataTypes.INTEGER,
+        // allowNull: false,  // Tùy chọn, có thể không cho phép null
+    },
+    canhBao2Id: {
+        type: DataTypes.INTEGER,
+        // allowNull: false,  // Tùy chọn, có thể không cho phép null
+    },
+    linkId: {
+        type: DataTypes.INTEGER,
+        // allowNull: false,  // Tùy chọn, có thể không cho phép null
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
@@ -144,8 +156,7 @@ async function createCanhBaoAndLink(nameCB1, nameCB2, linkBuy, linkSell) {
         const newCanhBaoAndLink = await CanhBaoAndLink.create({
             canhBao1Id: cb1.id, // Use the IDs of the created CanhBao instances
             canhBao2Id: cb2.id,
-            linkId: 1,
-            cmm:"cmm"
+            linkId: newLink.id,
         });
         console.log('Đã tạo cảnh báo và linknewCanhBaoAndLink :',newCanhBaoAndLink)
         console.log('Đã tạo cảnh báo và link:', newCanhBaoAndLink.toJSON());
@@ -230,7 +241,49 @@ app.post('/resetState', async (req, res) => {
 function notifyClient() {
     fecthAllCanhBaoUpdated(true);
 }
+async function deleteAllCanhBaoAndLink() {
+    try {
+        const rowsDeleted = await CanhBaoAndLink.destroy({
+            where: {}, // Điều kiện WHERE để xóa tất cả các bản ghi
+            truncate: false, // Ngăn truncate (xóa và reset auto-increment)
+            //restartIdentity: false  // Tùy chọn, có thể cần thiết trong một số trường hợp
+        });
 
+        console.log(`Đã xóa ${rowsDeleted} bản ghi từ CanhBaoAndLink`);
+        return rowsDeleted;
+
+    } catch (error) {
+        console.error('Lỗi khi xóa tất cả bản ghi CanhBaoAndLink:', error);
+        return 0; // Hoặc throw error;
+    }
+}
+app.get('/CanhBaoAndLinkDeleteAll', async (req, res) => {
+    try {
+        const rowsDeleted = await   (); // Gọi hàm xóa
+
+        if (rowsDeleted >= 0) { // Kiểm tra xem có lỗi không (rowsDeleted >= 0)
+            res.status(200).json({ // Trả về 200 OK
+                success: true,
+                message: `Đã xóa ${rowsDeleted} bản ghi từ CanhBaoAndLink`,
+                rowsDeleted: rowsDeleted,
+            });
+        } else {
+            res.status(500).json({ // Trả về 500 Internal Server Error
+                success: false,
+                message: 'Lỗi khi xóa các bản ghi',
+                error: 'Unknown error',  // Cung cấp thông tin lỗi chungs
+            });
+        }
+
+    } catch (error) {
+        console.error('Lỗi trong route /CanhBaoAndLinkDeleteAll:', error);
+        res.status(500).json({ // Trả về 500 Internal Server Error
+            success: false,
+            message: 'Lỗi khi xóa các bản ghi',
+            error: error.message || 'Unknown error', // Hiển thị thông báo lỗi
+        });
+    }
+});
 async function updateCanhBao(canhbaoName, state) {
     try {
         const updatedCanhBao = await CanhBao.update(
