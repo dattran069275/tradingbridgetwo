@@ -212,21 +212,17 @@ app.post('/resetState', async (req, res) => {
     console.log(`resetState ${id}`)
     try {
         const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(id, {
-            include: [
-                { model: CanhBao, as: 'CanhBao1' },
-                { model: CanhBao, as: 'CanhBao1' },
-            ]
         });
 
         if (!updatedCanhBaoAndLink) {
             return res.status(404).send({ success: false, message: 'CanhBaoAndLink not found' });
         }
 
-        if (updatedCanhBaoAndLink.canhBao1) {
-            await updatedCanhBaoAndLink.canhBao1.update({ state: "wait" });
+        if (updatedCanhBaoAndLink.CanhBao1) {
+            await updatedCanhBaoAndLink.CanhBao1.update({ state: "wait" });
         }
-        if (updatedCanhBaoAndLink.canhBao2) {
-            await updatedCanhBaoAndLink.canhBao2.update({ state: "wait" });
+        if (updatedCanhBaoAndLink.CanhBao2) {
+            await updatedCanhBaoAndLink.CanhBao2.update({ state: "wait" });
         }
 
         await updatedCanhBaoAndLink.reload(); // Reload to get updated data
