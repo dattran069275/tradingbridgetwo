@@ -134,8 +134,8 @@
                 var id1=""+x._id;
                 row.innerHTML = `
                     <td>${x.index}</td>
-                    <td>${x.canhBao1.name}</td>
-                    <td>${x.canhBao1.state}</td>
+                    <td>${x.CanhBao1.name}</td>
+                    <td>${x.CanhBao1.state}</td>
                     <td>
                         <button class="remove-btn" onclick="removeCanhBao('${id1}','${index}')">Remove</button>
                     </td>
@@ -145,8 +145,8 @@
                 var id2=""+x._id;
                 rowCanhBao2.innerHTML = `
                     <td>Id: ${x._id}</td>
-                    <td>${x.canhBao2.name}</td>
-                    <td>${x.canhBao2.state}</td>
+                    <td>${x.CanhBao2.name}</td>
+                    <td>${x.CanhBao2.state}</td>
                     <td>
                      <button class="change-btn" onclick="resetState('${index}','${x._id}')">Reset Signal</button> 
                     </td>
@@ -155,10 +155,10 @@
                 const rowLinks = document.createElement('tr');
                 rowLinks.innerHTML = `
                     <td></td>
-                    <td> link buy <input type="text" id='${x.link.linkBuy}' value='${x.link.linkBuy}'></td>
-                    <td> link sell <input type="text" id='${x.link.linkSell}' value='${x.link.linkSell}'></td>
+                    <td> link buy <input type="text" id='${x.Link.linkBuy}' value='${x.Link.linkBuy}'></td>
+                    <td> link sell <input type="text" id='${x.Link.linkSell}' value='${x.Link.linkSell}'></td>
                     <td>
-                        <button type="button" class="change-btn" onclick="updateLinkNew('${x._id}','${x.link.linkBuy}','${x.link.linkSell}')">Update Link</button>
+                        <button type="button" class="change-btn" onclick="updateLinkNew('${x._id}','${x.Link.linkBuy}','${x.Link.linkSell}')">Update Link</button>
                     </td>
                 `;
             tableBody.appendChild(rowLinks);
