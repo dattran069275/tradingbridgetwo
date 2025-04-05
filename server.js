@@ -212,6 +212,7 @@ app.post('/resetState', async (req, res) => {
     console.log(`resetState ${id}`)
     try {
         const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(id, {
+            include: [{ model: CanhBao,as: 'CanhBao1' },{ model: CanhBao,as: 'CanhBao2' },]
         });
 
         if (!updatedCanhBaoAndLink) {
