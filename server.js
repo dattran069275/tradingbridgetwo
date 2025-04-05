@@ -340,7 +340,7 @@ app.get('/allCanhBaoAndLink', async (req, res) => {
             include: [
                 { model: CanhBao, as: 'CanhBao1' },
                 { model: CanhBao, as: 'CanhBao2' },
-                { model: linkSchema, as: 'link' }
+                { model: linkSchema, as: 'Link' }
             ],
             order: [['index', 'ASC']]
         });
