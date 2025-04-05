@@ -259,7 +259,7 @@ async function deleteAllCanhBaoAndLink() {
 }
 app.get('/CanhBaoAndLinkDeleteAll', async (req, res) => {
     try {
-        const rowsDeleted = await   (); // Gọi hàm xóa
+        const rowsDeleted = await  deleteAllCanhBaoAndLink(); // Gọi hàm xóa
 
         if (rowsDeleted >= 0) { // Kiểm tra xem có lỗi không (rowsDeleted >= 0)
             res.status(200).json({ // Trả về 200 OK
