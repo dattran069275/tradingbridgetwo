@@ -394,9 +394,9 @@ async function fecthAllCanhBaoUpdated(isEmit, req, res) {
     try {
         const allCanhBaoUpdated = await CanhBaoAndLink.findAll({
             include: [
-                { model: CanhBao, as: 'canhBao1' },
-                { model: CanhBao, as: 'canhBao2' },
-                { model: linkSchema },
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao2' },
+                { model: linkSchema,as: 'Link'},
             ],
             order: [['index', 'ASC']] // Sắp xếp theo index
         });
@@ -484,9 +484,9 @@ app.post('/new', async (req, res) => {
                 index: index
             },
             include: [
-                { model: CanhBao, as: 'canhBao1' },
-                { model: CanhBao, as: 'canhBao2' },
-                { model: linkSchema }
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao2' },
+                { model: linkSchema,as: 'Link' }
             ]
         });
 
