@@ -316,7 +316,7 @@ app.post('/updateLink', async (req, res) => {
             return res.status(404).json({ success: false, message: 'CanhBaoAndLink not found' });
         }
 
-        await updatedCanhBaoAndLink.linkSchema.update({
+        await updatedCanhBaoAndLink.Link.update({
             linkBuy: linkBuy,
             linkSell: linkSell,
             lastUpdate: Date.now()
