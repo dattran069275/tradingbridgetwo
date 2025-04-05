@@ -146,7 +146,7 @@ async function createCanhBaoAndLink(nameCB1, nameCB2, linkBuy, linkSell) {
             canhBao2Id: cb2.id,
             linkId: newLink.id,
         });
-
+        console.log('Đã tạo cảnh báo và linknewCanhBaoAndLink :',newCanhBaoAndLink)
         console.log('Đã tạo cảnh báo và link:', newCanhBaoAndLink.toJSON());
         return newCanhBaoAndLink.toJSON();
     } catch (error) {
