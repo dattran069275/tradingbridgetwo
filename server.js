@@ -309,7 +309,7 @@ app.post('/updateLink', async (req, res) => {
 
     try {
         const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(id, {
-            include: [{ model: linkSchema }]
+            include: [{ model: linkSchema,as: 'Link' }]
         });
 
         if (!updatedCanhBaoAndLink) {
