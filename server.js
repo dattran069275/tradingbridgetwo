@@ -292,7 +292,16 @@ app.get('/allCanhBaoAndLink', async (req, res) => {
         res.status(500).json({ message: 'Error fetching allCanhBaoAndLink', error: err });
     }
 });
-
+app.get('/allCanhBaoAndLinkBT', async (req, res) => {
+    try {
+        const allCanhBaoAndLink = await CanhBaoAndLink.findAll({
+            order: [['index', 'ASC']]
+        });
+        res.json(allCanhBaoAndLink.map(item => item.toJSON())); // Chuyển đổi sang JSON trước khi trả về
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching allCanhBaoAndLink', error: err });
+    }
+});
 app.get('/allLinks', async (req, res) => {
     try {
         const allLinks = await linkSchema.findAll();
