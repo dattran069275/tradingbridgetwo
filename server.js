@@ -281,13 +281,13 @@ app.get('/allCanhBaoAndLink', async (req, res) => {
     try {
         const allCanhBaoAndLink = await CanhBaoAndLink.findAll({
             include: [
-                { model: CanhBao, as: 'canhBao1' },
-                { model: CanhBao, as: 'canhBao2' },
+                { model: CanhBao, as: 'canhBao1' }, // Include CanhBao với alias canhBao1
+                { model: CanhBao, as: 'canhBao2' }, // Include CanhBao với alias canhBao2
                 { model: linkSchema },
             ],
             order: [['index', 'ASC']]
         });
-        res.json(allCanhBaoAndLink.map(item => item.toJSON()));
+        res.json(allCanhBaoAndLink.map(item => item.toJSON())); // Chuyển đổi sang JSON trước khi trả về
     } catch (err) {
         res.status(500).json({ message: 'Error fetching allCanhBaoAndLink', error: err });
     }
