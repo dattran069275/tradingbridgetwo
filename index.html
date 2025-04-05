@@ -131,7 +131,7 @@
             // Lặp qua dữ liệu và thêm từng dòng vào bảng
             data.forEach((x, index) => {
                 const row = document.createElement('tr');
-                var id1=""+x._id;
+                var id1=""+x.index;
                 row.innerHTML = `
                     <td>${x.index}</td>
                     <td>${x.CanhBao1.name}</td>
@@ -142,13 +142,13 @@
                 `;
                 tableBody.appendChild(row);
                 const rowCanhBao2 = document.createElement('tr');
-                var id2=""+x._id;
+                var id2=""+x.index;
                 rowCanhBao2.innerHTML = `
-                    <td>Id: ${x._id}</td>
+                    <td>Id: ${x.index}</td>
                     <td>${x.CanhBao2.name}</td>
                     <td>${x.CanhBao2.state}</td>
                     <td>
-                     <button class="change-btn" onclick="resetState('${index}','${x._id}')">Reset Signal</button> 
+                     <button class="change-btn" onclick="resetState('${index}','${x.index}')">Reset Signal</button> 
                     </td>
                 `;
                 tableBody.appendChild(rowCanhBao2);
@@ -158,7 +158,7 @@
                     <td> link buy <input type="text" id='${x.Link.linkBuy}' value='${x.Link.linkBuy}'></td>
                     <td> link sell <input type="text" id='${x.Link.linkSell}' value='${x.Link.linkSell}'></td>
                     <td>
-                        <button type="button" class="change-btn" onclick="updateLinkNew('${x._id}','${x.Link.linkBuy}','${x.Link.linkSell}')">Update Link</button>
+                        <button type="button" class="change-btn" onclick="updateLinkNew('${x.index}','${x.Link.linkBuy}','${x.Link.linkSell}')">Update Link</button>
                     </td>
                 `;
             tableBody.appendChild(rowLinks);
