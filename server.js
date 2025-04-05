@@ -494,7 +494,7 @@ app.post('/new', async (req, res) => {
             return res.status(404).send({ success: false, message: `CanhBaoAndLink with index ${index} not found` });
         }
 
-        const canhBao1 = record.canhBao1;
+        const canhBao1 = record.CanhBao1;
         if (!canhBao1) {
             return res.status(404).send({ success: false, message: `canhBao1 not found` });
         }
@@ -512,7 +512,7 @@ app.post('/new', async (req, res) => {
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
-                sendPayloadTo(req.body, record.linkSchema.linkSell, astro);
+                sendPayloadTo(req.body, record.Link.linkSell, astro);
                 await canhBao1.update({ state: "wait" });
                 await record.reload();
                 notifyClient();
