@@ -101,9 +101,9 @@ const CanhBaoAndLink = sequelize.define('CanhBaoAndLink', {
 });
 
 // Define associations
-CanhBaoAndLink.hasOne(CanhBao, { as: 'canhBao1', foreignKey: 'canhBao1Id' });
-CanhBaoAndLink.hasOne(CanhBao, { as: 'canhBao2', foreignKey: 'canhBao2Id' });
-CanhBaoAndLink.hasOne(linkSchema, { foreignKey: 'linkId' });
+CanhBaoAndLink.belongsTo(CanhBao, { as: 'CanhBao1', foreignKey: 'canhBao1Id' });
+CanhBaoAndLink.belongsTo(CanhBao, { as: 'CanhBao2', foreignKey: 'canhBao2Id' });
+CanhBaoAndLink.belongsTo(Link, { as: 'Link', foreignKey: 'linkId' });
 
 // Synchronize models with the database
 sequelize.sync()
@@ -213,8 +213,8 @@ app.post('/resetState', async (req, res) => {
     try {
         const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(id, {
             include: [
-                { model: CanhBao, as: 'canhBao1' },
-                { model: CanhBao, as: 'canhBao2' },
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao1' },
             ]
         });
 
@@ -330,14 +330,17 @@ app.post('/updateLink', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error updating Link', error: error });
     }
 });
-
+app.get('/deleteAll',(req,res)=>{
+    sequelize.sync({ force: true }); // XÓA TOÀN BỘ DỮ LIỆU, tạo lại DB
+    res.status(200).json({ message: 'force true'});
+})
 app.get('/allCanhBaoAndLink', async (req, res) => {
     try {
         const allCanhBaoAndLink = await CanhBaoAndLink.findAll({
             include: [
-                { model: CanhBao, as: 'canhBao1' }, // Include CanhBao với alias canhBao1
-                { model: CanhBao, as: 'canhBao2' }, // Include CanhBao với alias canhBao2
-                { model: linkSchema },
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao2' },
+                { model: Link, as: 'link' }
             ],
             order: [['index', 'ASC']]
         });
