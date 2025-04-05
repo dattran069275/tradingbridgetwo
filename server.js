@@ -103,7 +103,7 @@ const CanhBaoAndLink = sequelize.define('CanhBaoAndLink', {
 // Define associations
 CanhBaoAndLink.belongsTo(CanhBao, { as: 'CanhBao1', foreignKey: 'canhBao1Id' });
 CanhBaoAndLink.belongsTo(CanhBao, { as: 'CanhBao2', foreignKey: 'canhBao2Id' });
-CanhBaoAndLink.belongsTo(Link, { as: 'Link', foreignKey: 'linkId' });
+CanhBaoAndLink.belongsTo(linkSchema, { as: 'Link', foreignKey: 'linkId' });
 
 // Synchronize models with the database
 sequelize.sync()
@@ -340,7 +340,7 @@ app.get('/allCanhBaoAndLink', async (req, res) => {
             include: [
                 { model: CanhBao, as: 'CanhBao1' },
                 { model: CanhBao, as: 'CanhBao2' },
-                { model: Link, as: 'link' }
+                { model: linkSchema, as: 'link' }
             ],
             order: [['index', 'ASC']]
         });
