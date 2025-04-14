@@ -587,47 +587,43 @@ app.post('/', async (req, res) => {
     }
 });
 
-function sendPayloadTo(signal, payload, astro) {
-    console.log(`sendPayloadTo ${signal} ${astro}`);
-    console.log("send payload ", payload)
-    let url = '';
-    // Simplified for clarity, determine the correct URL based on the signal
-    if (signal === 'buy') {
-        url = "https://api-forex.fxastro.pro/api/webhooks/91816814-d267-484a-a110-4f6c25c5c034?privateKeyWebhook=805c81b991d9";  // Example BUY URL
-    } else if (signal === 'sell') {
-        url = "https://api-forex.fxastro.pro/api/webhooks/91816814-d267-484a-a110-4f6c25c5c034?privateKeyWebhook=805c81b991d9";  // Example SELL URL
-    } else if(astro==0){
-      url = "https://api-forex.fxastro.pro/api/webhooks/91816814-d267-484a-a110-4f6c25c5c034?privateKeyWebhook=805c81b991d9";
+function sendPayloadTo(payload,url,astro){
+  // Trả lại phản hồi cho client POST request
+ // Lấy thời gian hiện tại và gán vào biến timestamp
+ // Gửi POST request tới 3Commas
+ //var astro="https://api-forex.fxastro.pro/api/webhooks/91816814-d267-484a-a110-4f6c25c5c034?privateKeyWebhook=805c81b991d9"
+ //var commas='https://api.3commas.io/signal_bots/webhooks';
+ console.log(`sendPayloadTo ${url}`);
+ console.log("send payload ",payload)
+ if(astro==0){
+  const config = {
+    headers: {
+      'Content-Type': 'text/plain' // Hoặc 'application/x-www-form-urlencoded' nếu cần
     }
-    if (!url) {
-        console.warn("No URL defined for signal:", signal);
-        return;  // Exit if no URL is available
-    }
-    //console.log("astro ",astro);
-    if (astro==0) {
-      const config = {
-        headers: {
-          'Content-Type': 'text/plain'
-        }
-      };
-      axios.post(url, payload.content, config)
-      .then(response => {
-        console.log('Status:', response.status);
-        console.log('Data:', response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error.response ? error.response.data : error.message);
-      });
-    }
-    else{
-    axios.post(url, payload)
-        .then(response => {
-            console.log('Response from Astro:', response.data);
-        })
-        .catch(error => {
-            console.error('Error sending POST request Astro:', error);
-        });
-    }
+  };
+  console.log(payload)
+  console.log(payload.content)
+  axios.post(url, payload.content, config)
+  .then(response => {
+    console.log('Status:', response.status);
+    console.log('Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error.response ? error.response.data : error.message);
+  });
+ }
+ else {
+  axios.post(url, payload)
+  .then(response => {
+    console.log('Response from Astro:', response.data);
+    //res.status(200).send({ success: true, message: payload});
+  })
+  .catch(error => {
+    console.error('Error sending POST request Astro:', error);
+    //res.status(200).send({ success: false, message: payload});
+  });
+ }
+  
 }
 
 app.post('/gtatrend', (req, res) => {
