@@ -502,7 +502,7 @@ app.post('/new', async (req, res) => {
             }
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
-                sendPayloadTo(req.body, record.linkSchema.linkBuy, astro);
+                sendPayloadTo(req.body, record.Link.linkBuy, astro);
                 await canhBao1.update({ state: "wait" });
                 await record.reload();
                 notifyClient();
