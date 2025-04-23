@@ -13,7 +13,7 @@
     <label for="password">Mật khẩu:</label>
     <input type="password" id="password" name="password"><br><br>
     <button id="loginButton">Đăng nhập</button> -->
-    <h1>Chế độ Sáng/Tối</h1>
+    <h1>Chế độ Mode</h1>
 
     <div class="switch-container">
         <span class="switch-label">Chế độ:</span>
@@ -23,6 +23,9 @@
         </label>
         <span class="switch-text" id="modeText">Old Mode</span>
     </div>
+    <p>Inital mode</p>
+    <input type="text" id="initial_mode" placeholder="Enter buy/sell">
+    <button onclick="updateMode()">Update Mode</button>
     <p id="currentNumber">Current Number: 0</p>
     <input type="number" id="numberInput" placeholder="Enter a number">
     <button onclick="updateNumber()">Update Number</button>
@@ -125,6 +128,12 @@ socket.on('mode', (mode) => {
                 socket.emit('updateNumber', number);  // Gửi số mới đến server
             }
         }
+        function updateMode() {
+            const mode = document.getElementById('initial_mode').value;
+            if (!isNaN(mode)) {
+                socket.emit('updateInitialMode', mode);  // Gửi số mới đến server
+            }
+        }
   
     
     socket.on('currentLink',(linkBuy,linkSell)=>{
@@ -179,9 +188,23 @@ socket.on('mode', (mode) => {
                     </td>
                 `;
             tableBody.appendChild(rowLinks);
+            const rowTrendSignal = document.createElement('tr');
+                rowLinks.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <t></td>
+                    <td>
+                        <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','Buy')">Trend to Buy</button> <br>
+                        <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','Sell')">Trend to Sell</button>
+                    </td>
+                `;
+            tableBody.appendChild(rowLinks);
             });
             
         }); 
+        function updateTrendSignal(id,signal){
+
+        }
         function changeCanhBao(index) {
             alert(`Chỉnh sửa tại vị trí: ${index}`);
             // Bạn có thể thêm mã để hiển thị form chỉnh sửa hoặc làm bất cứ hành động nào.
@@ -277,7 +300,33 @@ darkModeToggle.addEventListener('change', () => {
     socket.emit('taoCanhBaoAndLink', { nameCB1: nameCB1,nameCB2: nameCB2,linkBuy:linkBuy,linkSell:linkSell });
     alertForm.style.display = 'none'; // Ẩn form sau khi lưu
   });
+async function updateTrendSignal(id,signal) {
 
+    const url = "https://tradingbridgetwo.onrender.com/updateTrenSignal"; // Assuming your backend route
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "id":id,"signal": signal}), // Send the link in the body
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Success:', data.message);
+        // resultElement.textContent = `Success: ${data.message}`;
+      } else {
+        console.error('Error:', data.message || 'An error occurred');
+        // resultElement.textContent = `Error: ${data.message || 'An error occurred'}`;
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      resultElement.textContent = 'Fetch error: ' + error;
+    }
+  }
 
   async function updateLinkNew(id,id1,id2) {
 

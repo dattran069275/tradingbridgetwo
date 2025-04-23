@@ -12,7 +12,7 @@ const path = require('path'); // Import the path module
 const port = process.env.PORT || 3000; // Cổng của server Node.js
 let currentNumber = 60;
 let currentSignal = "none";
-
+let mode="buy"
 app.use(cors());
 app.use(express.json());
 
@@ -455,7 +455,115 @@ app.get('/client.html', (req, res) => {
     console.log('Server received request for /index.html');
     res.sendFile(path.join(__dirname, 'index.html'));
 });
+app.post('/updateTrenSignal',async (req,res)=>{
+    let signal=req.body.signal;
+    let index=req.body.id;
+    try {
+        const record = await CanhBaoAndLink.findOne({
+            where: {
+                index: index
+            },
+            include: [
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao2' },
+                { model: linkSchema,as: 'Link' }
+            ]
+        });
+    
+        if (!record) {
+            return res.status(404).send({ success: false, message: `CanhBaoAndLink with index ${index} not found` });
+        }
+    
+        const canhBao1 = record.CanhBao1;
+        if (!canhBao1) {
+            return res.status(404).send({ success: false, message: `canhBao1 not found` });
+        }
+        const timestamp = Date.now();
+            await canhBao1.update({ state: signal, lastUpdate: timestamp });
+            await record.reload();
+            notifyClient();
+            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });
+    }
+    catch (error) {
+        console.error("Error in /new route:", error);
+        res.status(500).send({ success: false, message: 'Internal server error', error: error });
+    }
+    
+    
+})
+app.post('/newMode', async (req, res) => {
+    let CanhBaoName = req.query.name;
+    let message = req.query.message;
+    let index = req.query.index;
+    let astro = req.query.astro;
 
+    if (!CanhBaoName) {
+        return res.status(400).send({ success: false, message: 'Missing "name" in the query parameters.' });
+    }
+    if (!message) {
+        return res.status(400).send({ success: false, message: 'Missing "message" in the query parameters.' });
+    }
+    if (!index) {
+        return res.status(400).send({ success: false, message: 'Missing "index" in the query parameters.' });
+    }
+    if (!astro) {
+        return res.status(400).send({ success: false, message: 'Missing "astro" in the query parameters.' });
+    }
+
+    try {
+        const record = await CanhBaoAndLink.findOne({
+            where: {
+                index: index
+            },
+            include: [
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao2' },
+                { model: linkSchema,as: 'Link' }
+            ]
+        });
+
+        if (!record) {
+            return res.status(404).send({ success: false, message: `CanhBaoAndLink with index ${index} not found` });
+        }
+
+        const canhBao1 = record.CanhBao1;
+        if (!canhBao1) {
+            return res.status(404).send({ success: false, message: `canhBao1 not found` });
+        }
+
+        if (CanhBaoName === "easy") {
+            if (canhBao1.state === "wait") {
+                return res.status(404).send({ success: false, message: `wait for trend first` });
+            }
+            const currentState = canhBao1.state;
+            if (currentState === "buy" && message === "buy") {
+                sendPayloadTo(req.body, record.Link.linkBuy, astro);
+                await canhBao1.update({ state: "wait" });
+                await record.reload();
+                notifyClient();
+                return res.status(200).send({ success: true, message: `lets buy` });
+            }
+            if (currentState === "sell" && message === "sell") {
+                sendPayloadTo(req.body, record.Link.linkSell, astro);
+                await canhBao1.update({ state: "wait" });
+                await record.reload();
+                notifyClient();
+                return res.status(200).send({ success: true, message: `lets sell` });
+            }
+            return;
+        } else {
+            mode=(mode=="buy"?"sell":"buy");
+            const timestamp = Date.now();
+            await canhBao1.update({ state: message, lastUpdate: timestamp });
+            await record.reload();
+            notifyClient();
+            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });
+        }
+    } catch (error) {
+        console.error("Error in /new route:", error);
+        res.status(500).send({ success: false, message: 'Internal server error', error: error });
+    }
+});
 app.post('/new', async (req, res) => {
     let CanhBaoName = req.query.name;
     let message = req.query.message;
@@ -683,7 +791,10 @@ io.on('connection', (socket) => {
         currentNumber = newNumber;
         io.emit('currentNumber', currentNumber);
     });
-
+    socket.on('updateInitialMode', (newMode) => {
+        console.log('updateInitialMode:', newMode);
+        mode=newMode;
+    });
     socket.on('taoCanhBao', async ({ name }) => { // Removed buyMessage and sellMessage
         try {
             await createCanhBao(name);
