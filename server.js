@@ -456,12 +456,11 @@ app.get('/client.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 app.post('/updateTrendSignal',async (req,res)=>{
-    let signal=req.body.signal;
-    let index=req.body.id;
+    const { signal, id } = req.body;
     try {
         const record = await CanhBaoAndLink.findOne({
             where: {
-                index: index
+                index: id
             },
             include: [
                 { model: CanhBao, as: 'CanhBao1' },

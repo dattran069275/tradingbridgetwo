@@ -194,17 +194,14 @@ socket.on('mode', (mode) => {
                     <td></td>
                     <t></td>
                     <td>
-                        <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','Buy')">Trend to Buy</button> <br>
-                        <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','Sell')">Trend to Sell</button>
+                        <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','buy')">Trend to Buy</button> <br>
+                        <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','sell')">Trend to Sell</button>
                     </td>
                 `;
             tableBody.appendChild(rowLinks);
             });
             
         }); 
-        function updateTrendSignal(id,signal){
-
-        }
         function changeCanhBao(index) {
             alert(`Chỉnh sửa tại vị trí: ${index}`);
             // Bạn có thể thêm mã để hiển thị form chỉnh sửa hoặc làm bất cứ hành động nào.
