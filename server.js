@@ -662,7 +662,9 @@ io.on('connection', (socket) => {
         console.log('Client disconnected', socket.id);
     });
     socket.emit('currentNumber', currentNumber);
-
+    socket.on('modeChange', async (newMode) => {
+        socket.emit('modeChange', newMode);
+    });
     socket.on('deleteCanhBaoAndLink', async (id) => {
         try {
           const deleted = await deleteCanhBaotByIdConvenient(id);
