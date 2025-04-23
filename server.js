@@ -455,7 +455,7 @@ app.get('/client.html', (req, res) => {
     console.log('Server received request for /index.html');
     res.sendFile(path.join(__dirname, 'index.html'));
 });
-app.post('/updateTrenSignal',async (req,res)=>{
+app.post('/updateTrendSignal',async (req,res)=>{
     let signal=req.body.signal;
     let index=req.body.id;
     try {
