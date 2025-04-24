@@ -163,6 +163,7 @@ async function createCanhBaoAndLink(nameCB1, nameCB2, linkBuy, linkSell) {
         });
         console.log('Đã tạo cảnh báo và linknewCanhBaoAndLink :',newCanhBaoAndLink)
         console.log('Đã tạo cảnh báo và link:', newCanhBaoAndLink.toJSON());
+        notifyClient();
         return newCanhBaoAndLink.toJSON();
     } catch (error) {
         console.error('Lỗi khi tạo cảnh báo:', error);
@@ -481,7 +482,7 @@ app.post('/updateTrendSignal',async (req,res)=>{
             return res.status(404).send({ success: false, message: `canhBao1 not found` });
         }
         const timestamp = Date.now();
-            await canhBao1.update({ state: signal, lastUpdate: timestamp });
+            await canhBao1.update({ state: signal,oldState: signal, lastUpdate: timestamp });
             await record.reload();
             notifyClient();
             res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });

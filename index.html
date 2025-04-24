@@ -189,7 +189,7 @@ socket.on('mode', (mode) => {
                 `;
             tableBody.appendChild(rowLinks);
             const rowTrendSignal = document.createElement('tr');
-                rowLinks.innerHTML = `
+            rowTrendSignal.innerHTML = `
                     <td></td>
                     <td></td>
                     <t></td>
@@ -198,7 +198,7 @@ socket.on('mode', (mode) => {
                         <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','sell')">Trend to Sell</button>
                     </td>
                 `;
-            tableBody.appendChild(rowLinks);
+            tableBody.appendChild(rowTrendSignal);
             });
             
         }); 
