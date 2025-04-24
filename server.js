@@ -549,6 +549,7 @@ app.post('/newMode', async (req, res) => {
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets sell` });
             }
+            res.status(500).send({ success: false, message: 'doing nothing', error: error });
             return;
         } else {
             mode=(mode=="buy"?"sell":"buy");
