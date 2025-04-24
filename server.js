@@ -38,6 +38,10 @@ const CanhBao = sequelize.define('CanhBao', {
         type: DataTypes.STRING,
         defaultValue: 'wait'
     },
+    oldState: {
+        type: DataTypes.STRING,
+        defaultValue: 'wait'
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
@@ -519,8 +523,8 @@ app.post('/newMode/reverseTrendSignal', async (req, res) => {
             return res.status(404).send({ success: false, message: `canhBao1 not found` });
         }
         const timestamp = Date.now();
-        var newMode=(canhBao1.state==="buy")?"sell":"buy";
-            await canhBao1.update({ state: newMode, lastUpdate: timestamp });
+        var newMode=(canhBao1.oldState==="buy")?"sell":"buy";
+            await canhBao1.update({ state: newMode,oldState: newMode, lastUpdate: timestamp });
             await record.reload();
             notifyClient();
             res.status(200).send({ success: true, message: `CanhBao1 state updated to ${newMode}` });    
@@ -576,14 +580,14 @@ app.post('/newMode', async (req, res) => {
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
                 sendPayloadTo(req.body, record.Link.linkBuy, astro);
-                await canhBao1.update({ state: "sell" });
+                await canhBao1.update({ state: "wait" });
                 await record.reload();
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
                 sendPayloadTo(req.body, record.Link.linkSell, astro);
-                await canhBao1.update({ state: "buy" });
+                await canhBao1.update({ state: "wait" });
                 await record.reload();
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets sell` });
