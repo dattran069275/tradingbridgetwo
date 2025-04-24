@@ -12,7 +12,6 @@ const path = require('path'); // Import the path module
 const port = process.env.PORT || 3000; // Cổng của server Node.js
 let currentNumber = 60;
 let currentSignal = "none";
-let mode="buy"
 app.use(cors());
 app.use(express.json());
 
@@ -537,14 +536,14 @@ app.post('/newMode', async (req, res) => {
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
                 sendPayloadTo(req.body, record.Link.linkBuy, astro);
-                await canhBao1.update({ state: "wait" });
+                await canhBao1.update({ state: "sell" });
                 await record.reload();
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
                 sendPayloadTo(req.body, record.Link.linkSell, astro);
-                await canhBao1.update({ state: "wait" });
+                await canhBao1.update({ state: "buy" });
                 await record.reload();
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets sell` });
@@ -552,7 +551,6 @@ app.post('/newMode', async (req, res) => {
             res.status(500).send({ success: false, message: 'doing nothing', error: error });
             return;
         } else {
-            mode=(mode=="buy"?"sell":"buy");
             const timestamp = Date.now();
             await canhBao1.update({ state: message, lastUpdate: timestamp });
             await record.reload();

@@ -13,7 +13,7 @@
     <label for="password">Mật khẩu:</label>
     <input type="password" id="password" name="password"><br><br>
     <button id="loginButton">Đăng nhập</button> -->
-    <h1>Chế độ Mode</h1>
+    <!-- <h1>Chế độ Mode</h1>
 
     <div class="switch-container">
         <span class="switch-label">Chế độ:</span>
@@ -22,10 +22,10 @@
             <span class="slider"></span>
         </label>
         <span class="switch-text" id="modeText">Old Mode</span>
-    </div>
-    <p>Inital mode</p>
+    </div> -->
+    <!-- <p>Inital mode</p>
     <input type="text" id="initial_mode" placeholder="Enter buy/sell">
-    <button onclick="updateMode()">Update Mode</button>
+    <button onclick="updateMode()">Update Mode</button> -->
     <p id="currentNumber">Current Number: 0</p>
     <input type="number" id="numberInput" placeholder="Enter a number">
     <button onclick="updateNumber()">Update Number</button>
@@ -128,11 +128,11 @@ socket.on('mode', (mode) => {
                 socket.emit('updateNumber', number);  // Gửi số mới đến server
             }
         }
-        function updateMode() {
-            const mode = document.getElementById('initial_mode').value;
-            if (!isNaN(mode)) {
-                socket.emit('updateInitialMode', mode);  // Gửi số mới đến server
-            }
+         function updateMode() {
+        //     const mode = document.getElementById('initial_mode').value;
+        //     if (!isNaN(mode)) {
+        //         socket.emit('updateInitialMode', mode);  // Gửi số mới đến server
+        //     }
         }
   
     
