@@ -229,36 +229,36 @@ socket.on('mode', (mode) => {
                 alert("Hành động xóa bị hủy.");
             }
         }
-const darkModeToggle = document.getElementById('darkModeToggle');
-const modeText = document.getElementById('modeText');
+// const darkModeToggle = document.getElementById('darkModeToggle');
+// const modeText = document.getElementById('modeText');
 
-// Hàm để áp dụng chế độ tối/sáng
-function setDarkMode(isDark) {
-    if (isDark) {
-        document.body.classList.add('dark-mode');
-        modeText.textContent = 'Old Mode'; // Thay đổi thành "Old Mode"
-    } else {
-        document.body.classList.remove('dark-mode');
-        modeText.textContent = 'New Mode'; // Thay đổi thành "New Mode"
-    }
-}
+// // Hàm để áp dụng chế độ tối/sáng
+// function setDarkMode(isDark) {
+//     if (isDark) {
+//         document.body.classList.add('dark-mode');
+//         modeText.textContent = 'Old Mode'; // Thay đổi thành "Old Mode"
+//     } else {
+//         document.body.classList.remove('dark-mode');
+//         modeText.textContent = 'New Mode'; // Thay đổi thành "New Mode"
+//     }
+// }
 
-// Hàm để cập nhật trạng thái switch dựa trên chế độ (light/dark) từ server
-function updateSwitchState(mode) {
-    if (mode === 'old') {
-        darkModeToggle.checked = true;
-        setDarkMode(true);
-    } else {
-        darkModeToggle.checked = false;
-        setDarkMode(false);
-    }
-}
-darkModeToggle.addEventListener('change', () => {
-    const newMode = darkModeToggle.checked ? 'old' : 'new';
-    console.log('Sending modeChange:', newMode);
-    socket.emit('modeChange', newMode); // Gửi sự kiện đến server
-    setDarkMode(darkModeToggle.checked); // cập nhật giao diện ngay lập tức
-});
+// // Hàm để cập nhật trạng thái switch dựa trên chế độ (light/dark) từ server
+// function updateSwitchState(mode) {
+//     if (mode === 'old') {
+//         darkModeToggle.checked = true;
+//         setDarkMode(true);
+//     } else {
+//         darkModeToggle.checked = false;
+//         setDarkMode(false);
+//     }
+// }
+// darkModeToggle.addEventListener('change', () => {
+//     const newMode = darkModeToggle.checked ? 'old' : 'new';
+//     console.log('Sending modeChange:', newMode);
+//     socket.emit('modeChange', newMode); // Gửi sự kiện đến server
+//     setDarkMode(darkModeToggle.checked); // cập nhật giao diện ngay lập tức
+// });
 
 
 
