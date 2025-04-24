@@ -519,11 +519,11 @@ app.post('/newMode/reverseTrendSignal', async (req, res) => {
             return res.status(404).send({ success: false, message: `canhBao1 not found` });
         }
         const timestamp = Date.now();
-        var newMode=(canhBao1.state=="buy")?"sell":"buy";
+        var newMode=(canhBao1.state==="buy")?"sell":"buy";
             await canhBao1.update({ state: newMode, lastUpdate: timestamp });
             await record.reload();
             notifyClient();
-            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });    
+            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${newMode}` });    
     } catch (error) {
         console.error("Error in /new route:", error);
         res.status(500).send({ success: false, message: 'Internal server error', error: error });
