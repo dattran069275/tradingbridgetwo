@@ -489,6 +489,46 @@ app.post('/updateTrendSignal',async (req,res)=>{
     
     
 })
+app.post('/newMode/reverseTrendSignal', async (req, res) => {
+    let index = req.query.index;
+    let astro = req.query.astro;
+    if (!index) {
+        return res.status(400).send({ success: false, message: 'Missing "index" in the query parameters.' });
+    }
+    if (!astro) {
+        return res.status(400).send({ success: false, message: 'Missing "astro" in the query parameters.' });
+    }
+    try {
+        const record = await CanhBaoAndLink.findOne({
+            where: {
+                index: index
+            },
+            include: [
+                { model: CanhBao, as: 'CanhBao1' },
+                { model: CanhBao, as: 'CanhBao2' },
+                { model: linkSchema,as: 'Link' }
+            ]
+        });
+
+        if (!record) {
+            return res.status(404).send({ success: false, message: `CanhBaoAndLink with index ${index} not found` });
+        }
+
+        const canhBao1 = record.CanhBao1;
+        if (!canhBao1) {
+            return res.status(404).send({ success: false, message: `canhBao1 not found` });
+        }
+        const timestamp = Date.now();
+        var newMode=(canhBao1.state=="buy")?"sell":"buy";
+            await canhBao1.update({ state: newMode, lastUpdate: timestamp });
+            await record.reload();
+            notifyClient();
+            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });    
+    } catch (error) {
+        console.error("Error in /new route:", error);
+        res.status(500).send({ success: false, message: 'Internal server error', error: error });
+    }
+});
 app.post('/newMode', async (req, res) => {
     let CanhBaoName = req.query.name;
     let message = req.query.message;
