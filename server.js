@@ -482,7 +482,7 @@ app.post('/updateTrendSignal',async (req,res)=>{
             return res.status(404).send({ success: false, message: `canhBao1 not found` });
         }
         const timestamp = Date.now();
-            await canhBao1.update({ state: signal,oldState: signal, lastUpdate: timestamp });
+            await canhBao1.update({ state: signal,oldState: "...", lastUpdate: timestamp });
             await record.reload();
             notifyClient();
             res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });
@@ -524,8 +524,15 @@ app.post('/newMode/reverseTrendSignal', async (req, res) => {
             return res.status(404).send({ success: false, message: `canhBao1 not found` });
         }
         const timestamp = Date.now();
-        var newMode=(canhBao1.oldState==="buy")?"sell":"buy";
-            await canhBao1.update({ state: newMode,oldState: newMode, lastUpdate: timestamp });
+        var newMode,oldState;
+        if(canhBao1.state==="wait"){
+            newMode=(canhBao1.oldState==="buy")?"sell":"buy";
+            oldState=canhBao1.oldState;
+        } else{
+            newMode=(canhBao1.state==="buy")?"sell":"buy";
+            oldState=canhBao1.state;
+        }
+            await canhBao1.update({ state: newMode,oldState: oldState, lastUpdate: timestamp });
             await record.reload();
             notifyClient();
             res.status(200).send({ success: true, message: `CanhBao1 state updated to ${newMode}` });    
