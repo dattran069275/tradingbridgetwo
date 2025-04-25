@@ -588,14 +588,14 @@ app.post('/newMode', async (req, res) => {
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
                 sendPayloadTo(req.body, record.Link.linkBuy, astro);
-                await canhBao1.update({ state: "wait" });
+                await canhBao1.update({ state: "wait", oldState: "buy" });
                 await record.reload();
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
                 sendPayloadTo(req.body, record.Link.linkSell, astro);
-                await canhBao1.update({ state: "wait" });
+                await canhBao1.update({ state: "wait" , oldState: "sell"});
                 await record.reload();
                 notifyClient();
                 return res.status(200).send({ success: true, message: `lets sell` });
