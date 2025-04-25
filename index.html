@@ -161,7 +161,7 @@ socket.on('mode', (mode) => {
                 row.innerHTML = `
                     <td>${x.index}</td>
                     <td>${x.CanhBao1.name}</td>
-                    <td>${x.CanhBao1.state}</td>
+                    <td>${x.CanhBao1.state} (${x.CanhBao1.oldState})</td>
                     <td>
                         <button class="remove-btn" onclick="removeCanhBao('${id1}','${index}')">Remove</button>
                     </td>
