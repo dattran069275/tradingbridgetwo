@@ -494,7 +494,7 @@ app.post('/updateTrendSignal',async (req,res)=>{
     
     
 })
-app.post('/newMode/reverseTrendSignal', async (req, res) => {
+app.post('/newMode/1reverseTrendSignal', async (req, res) => {
     let index = req.query.index;
     let astro = req.query.astro;
     if (!index) {
@@ -541,7 +541,7 @@ app.post('/newMode/reverseTrendSignal', async (req, res) => {
         res.status(500).send({ success: false, message: 'Internal server error', error: error });
     }
 });
-app.post('/newMode', async (req, res) => {
+app.post('/newMode/1', async (req, res) => {
     let CanhBaoName = req.query.name;
     let message = req.query.message;
     let index = req.query.index;
