@@ -549,7 +549,7 @@ app.post('/newMode/tp', async (req, res) => {
     }
     console.log("receive value:" +value);
     tp=10*value;
-    sl=rate*tp;
+    sl=rateTPSL*tp;
     return res.status(200).send({ success: true, message: 'receive value '+value });
 })
 app.post('/newMode/1', async (req, res) => {
