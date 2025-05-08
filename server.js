@@ -541,6 +541,16 @@ app.post('/newMode/1reverseTrendSignal', async (req, res) => {
         res.status(500).send({ success: false, message: 'Internal server error', error: error });
     }
 });
+let tp=0,sl=0,rateTPSL=1.5;
+app.post('/newMode/tp', async (req, res) => {
+    let value = req.query.value;
+    if (!value) {
+        return res.status(400).send({ success: false, message: 'Missing "value" in the query parameters.' });
+    }
+    console.log("receive value:" +value);
+    tp=10*value;
+    sl=rate*tp;
+})
 app.post('/newMode/1', async (req, res) => {
     let CanhBaoName = req.query.name;
     let message = req.query.message;
