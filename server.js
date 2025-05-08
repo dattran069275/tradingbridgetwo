@@ -543,7 +543,7 @@ app.post('/newMode/1reverseTrendSignal', async (req, res) => {
 });
 let tp=1,sl=1,rateTPSL=1.5;
 app.post('/newMode/tp', async (req, res) => {
-    let value = req.query.value;
+    let value = req.body.value;
     if (!value) {
         return res.status(400).send({ success: false, message: 'Missing "value" in the query parameters.' });
     }
@@ -614,7 +614,13 @@ app.post('/newMode/1', async (req, res) => {
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
-                sendPayloadTo(req.body, record.Link.linkSell, astro);
+                let myArray = myObject.content.split(',');
+                let n=myArray.length;
+                myArray[n-1]="tp="+tp;
+                myArray[n-2]="sl="+sl;;  
+                myString = myArray.join(",");
+                console.log("myString filter: "+myString)  ;
+                sendPayloadTo(myString, record.Link.linkSell, astro);
                 await canhBao1.update({ state: "wait" , oldState: "sell"});
                 await record.reload();
                 notifyClient();
