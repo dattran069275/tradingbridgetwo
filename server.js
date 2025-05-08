@@ -541,7 +541,7 @@ app.post('/newMode/1reverseTrendSignal', async (req, res) => {
         res.status(500).send({ success: false, message: 'Internal server error', error: error });
     }
 });
-let tp=0,sl=0,rateTPSL=1.5;
+let tp=1,sl=1,rateTPSL=1.5;
 app.post('/newMode/tp', async (req, res) => {
     let value = req.query.value;
     if (!value) {
@@ -597,7 +597,17 @@ app.post('/newMode/1', async (req, res) => {
             }
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
-                sendPayloadTo(req.body, record.Link.linkBuy, astro);
+                var myString=req.body;
+                let myObject = JSON.parse(myString);
+
+// 2. Split the "content" property by ","
+                let myArray = myObject.content.split(',');
+                let n=myArray.length;
+                myArray[n-1]="tp="+tp;
+                myArray[n-2]="sl="+sl;;  
+                myString = myArray.join(",");
+                console.log("myString filter: "+myString)  ;
+                sendPayloadTo(myString, record.Link.linkBuy, astro);
                 await canhBao1.update({ state: "wait", oldState: "buy" });
                 await record.reload();
                 notifyClient();
