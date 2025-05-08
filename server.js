@@ -544,6 +544,7 @@ app.post('/newMode/1reverseTrendSignal', async (req, res) => {
 let tp=1,sl=1,rateTPSL=1.5;
 app.post('/newMode/tp', async (req, res) => {
     let value = req.body.value;
+    value=Math.trunc(value)
     if (!value) {
         return res.status(400).send({ success: false, message: 'Missing "value" in the query parameters.' });
     }
