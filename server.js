@@ -600,13 +600,14 @@ app.post('/newMode/1', async (req, res) => {
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
                 var myString=req.body;
+                console.log("myString req.body: "+myString)  ;
                 let myObject = JSON.parse(myString);
 
 // 2. Split the "content" property by ","
                 let myArray = myObject.content.split(',');
                 let n=myArray.length;
-                myArray[n-1]="tp="+tp;
-                myArray[n-2]="sl="+sl;;  
+                myArray[n-2]="tp="+tp;
+                myArray[n-1]="sl="+sl;;  
                 myString = myArray.join(",");
                 console.log("myString filter: "+myString)  ;
                 sendPayloadTo(myString, record.Link.linkBuy, astro);
@@ -616,10 +617,12 @@ app.post('/newMode/1', async (req, res) => {
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
+                var myString=req.body;
+                let myObject = JSON.parse(myString);
                 let myArray = myObject.content.split(',');
                 let n=myArray.length;
-                myArray[n-1]="tp="+tp;
-                myArray[n-2]="sl="+sl;;  
+                myArray[n-2]="tp="+tp;
+                myArray[n-1]="sl="+sl;;  
                 myString = myArray.join(",");
                 console.log("myString filter: "+myString)  ;
                 sendPayloadTo(myString, record.Link.linkSell, astro);
