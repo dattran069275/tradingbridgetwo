@@ -549,8 +549,8 @@ app.post('/newMode/tp', async (req, res) => {
         return res.status(400).send({ success: false, message: 'Missing "value" in the query parameters.' });
     }
     console.log("receive value:" +value);
-    tp=10*value;
-    sl=rateTPSL*tp;
+    tp=1.5*value;
+    sl=value;
     return res.status(200).send({ success: true, message: 'receive value '+value });
 })
 app.post('/newMode/1', async (req, res) => {
