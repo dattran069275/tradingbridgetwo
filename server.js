@@ -799,8 +799,10 @@ function sendPayloadTo(payload,url,astro){
   console.log("send payload content "+ payload.content+ "payload raw: "+ payload)
   axios.post(url, payload.content, config)
   .then(response => {
+    console.log('response:', response);
     console.log('Status:', response.status);
     console.log('Data:', response.data);
+    console.log('message:', response.message);
   })
   .catch(error => {
     console.error('Error:', error.response ? error.response.data : error.message);
