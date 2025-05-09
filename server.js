@@ -86,7 +86,7 @@ const CanhBaoAndLink = sequelize.define('CanhBaoAndLink', {
         defaultValue: 1.5
     },
     tpslValue:{
-        type:DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         default:0
     },
     canhBao1Id: {
@@ -607,6 +607,28 @@ app.post('/newMode/tp', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error updating tpsl value', error: error });
     } 
     return res.status(200).send({ success: true, message: 'receive value '+value });
+})
+
+app.get('/checkTpValue',async(req,res)=>{
+    let index = req.query.index;
+    if (!index) {
+        return res.status(400).send({ success: false, message: 'Missing "index" in the query parameters.' });
+    }
+    try {
+        const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(index, {
+            include: [{ model: linkSchema,as: 'Link' }]
+        });
+
+        if (!updatedCanhBaoAndLink) {
+            return res.status(404).json({ success: false, message: 'CanhBaoAndLink not found' });
+        }
+
+        res.status(200).json({ success: true, message: 'current Value '+updatedCanhBaoAndLink.tpslValue, data: updatedCanhBaoAndLink.toJSON() });
+        notifyClient();
+    } catch (error) {
+        console.error('Lỗi khi search tpsl value:', error);
+        res.status(500).json({ success: false, message: 'Lỗi khi search tpsl value', error: error });
+    } 
 })
 app.post('/newMode/1', async (req, res) => {
     let CanhBaoName = req.query.name;
