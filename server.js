@@ -608,8 +608,9 @@ app.post('/newMode/1', async (req, res) => {
                 myArray[n-2]="tp="+tp;
                 myArray[n-1]="sl="+sl;;  
                 myString = myArray.join(",");
-                console.log("myString filter: "+myString)  ;
-                sendPayloadTo(myString, record.Link.linkBuy, astro);
+                console.log("req.body filter: "+myString)  ;
+                req.body.content=myString;
+                sendPayloadTo( req.body, record.Link.linkBuy, astro);
                 await canhBao1.update({ state: "wait", oldState: "buy" });
                 await record.reload();
                 notifyClient();
@@ -625,8 +626,10 @@ app.post('/newMode/1', async (req, res) => {
                 myArray[n-2]="tp="+tp;
                 myArray[n-1]="sl="+sl;;  
                 myString = myArray.join(",");
-                console.log("myString filter: "+myString)  ;
-                sendPayloadTo(myString, record.Link.linkSell, astro);
+                
+                req.body.content=myString;
+                console.log("req.body filter: "+myString)  ;
+                sendPayloadTo(req.body, record.Link.linkSell, astro);
                 await canhBao1.update({ state: "wait" , oldState: "sell"});
                 await record.reload();
                 notifyClient();
@@ -793,6 +796,7 @@ function sendPayloadTo(payload,url,astro){
   };
   console.log(payload)
   console.log(payload.content)
+  console.log("send payload content "+ payload.content+ "payload raw: "+ payload)
   axios.post(url, payload.content, config)
   .then(response => {
     console.log('Status:', response.status);
