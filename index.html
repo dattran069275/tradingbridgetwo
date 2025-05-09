@@ -190,8 +190,10 @@ socket.on('mode', (mode) => {
             tableBody.appendChild(rowLinks);
             const rowTrendSignal = document.createElement('tr');
             rowTrendSignal.innerHTML = `
-                    <td></td>
-                    <td></td>
+                    <td>TP=${x.tpslRate}SL</td>
+                    <td> New rate <input type="text" id='${x.index+'rate'}' value='${x.tpslRate}'>
+                      <button type="button" class="change-btn" onclick="updateRate('${x.index}')">Update Rate</button>
+                      </td>
                     <t></td>
                     <td>
                         <button type="button" class="change-btn" onclick="updateTrendSignal('${x.index}','buy')">Trend to Buy</button> <br>
@@ -324,7 +326,37 @@ async function updateTrendSignal(id,signal) {
       resultElement.textContent = 'Fetch error: ' + error;
     }
   }
+   async function updateRate(id) {
+    var newRate=document.getElementById(id+'rate').value;
+    if (!newRate) {
+      alert("Please enter newRate");
+      return;
+    }
+    const url = "https://tradingbridgetwo.onrender.com/updateRate"; // Assuming your backend route
 
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "id":id,"rate": newRate}), // Send the link in the body
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Success:', data.message);
+        // resultElement.textContent = `Success: ${data.message}`;
+      } else {
+        console.error('Error:', data.message || 'An error occurred');
+        // resultElement.textContent = `Error: ${data.message || 'An error occurred'}`;
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      resultElement.textContent = 'Fetch error: ' + error;
+    }
+  }
   async function updateLinkNew(id,id1,id2) {
 
     let linkValue;

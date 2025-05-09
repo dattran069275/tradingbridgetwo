@@ -81,6 +81,10 @@ const CanhBaoAndLink = sequelize.define('CanhBaoAndLink', {
         primaryKey: true,
         autoIncrement: true // Auto-increment for index
     },
+    tpslRate: {
+        type: DataTypes.DOUBLE,
+        defaultValue: 1.5
+    },
     canhBao1Id: {
         type: DataTypes.INTEGER,
         // allowNull: false,  // Tùy chọn, có thể không cho phép null
@@ -304,7 +308,31 @@ async function updateCanhBao(canhbaoName, state) {
         return null;
     }
 }
+app.post('/updateRate', async (req, res) => {
+    const { id, rate} = req.body;
 
+    try {
+        const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(id, {
+            include: [{ model: linkSchema,as: 'Link' }]
+        });
+
+        if (!updatedCanhBaoAndLink) {
+            return res.status(404).json({ success: false, message: 'CanhBaoAndLink not found' });
+        }
+
+        await updatedCanhBaoAndLink.update({
+            tpslRate: rate,
+            lastUpdate: Date.now()
+        });
+
+        await updatedCanhBaoAndLink.reload();
+        res.status(200).json({ success: true, message: 'Link updated successfully', data: updatedCanhBaoAndLink.toJSON() });
+        notifyClient();
+    } catch (error) {
+        console.error('Lỗi khi cập nhật Link:', error);
+        res.status(500).json({ success: false, message: 'Error updating Link', error: error });
+    }
+});
 app.post('/updateLink', async (req, res) => {
     const { id, linkBuy, linkSell } = req.body;
 
