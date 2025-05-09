@@ -599,12 +599,11 @@ app.post('/newMode/1', async (req, res) => {
             }
             const currentState = canhBao1.state;
             if (currentState === "buy" && message === "buy") {
-                var myString=req.body;
+                var myString=req.body.content;  
                 console.log("myString req.body: "+myString)  ;
-                let myObject = JSON.parse(myString);
 
 // 2. Split the "content" property by ","
-                let myArray = myObject.content.split(',');
+                let myArray = myObject.split(',');
                 let n=myArray.length;
                 myArray[n-2]="tp="+tp;
                 myArray[n-1]="sl="+sl;;  
