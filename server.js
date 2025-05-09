@@ -485,7 +485,7 @@ app.post('/updateTrendSignal',async (req,res)=>{
             await canhBao1.update({ state: signal,oldState: "...", lastUpdate: timestamp });
             await record.reload();
             notifyClient();
-            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${message}` });
+            res.status(200).send({ success: true, message: `CanhBao1 state updated to ${signal}` });
     }
     catch (error) {
         console.error("Error in /new route:", error);
