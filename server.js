@@ -606,7 +606,6 @@ app.post('/newMode/tp', async (req, res) => {
         console.error('Lỗi khi cập nhật tpsl value:', error);
         res.status(500).json({ success: false, message: 'Error updating tpsl value', error: error });
     } 
-    return res.status(200).send({ success: true, message: 'receive value '+value });
 })
 
 app.get('/checkTpValue',async(req,res)=>{
