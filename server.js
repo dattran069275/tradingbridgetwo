@@ -603,7 +603,7 @@ app.post('/newMode/1', async (req, res) => {
                 console.log("myString req.body: "+myString)  ;
 
 // 2. Split the "content" property by ","
-                let myArray = myObject.split(',');
+                let myArray = myString.split(',');
                 let n=myArray.length;
                 myArray[n-2]="tp="+tp;
                 myArray[n-1]="sl="+sl;;  
@@ -616,9 +616,11 @@ app.post('/newMode/1', async (req, res) => {
                 return res.status(200).send({ success: true, message: `lets buy` });
             }
             if (currentState === "sell" && message === "sell") {
-                var myString=req.body;
-                let myObject = JSON.parse(myString);
-                let myArray = myObject.content.split(',');
+                var myString=req.body.content;  
+                console.log("myString req.body: "+myString)  ;
+
+// 2. Split the "content" property by ","
+                let myArray = myString.split(',');
                 let n=myArray.length;
                 myArray[n-2]="tp="+tp;
                 myArray[n-1]="sl="+sl;;  
