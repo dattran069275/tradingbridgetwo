@@ -85,6 +85,10 @@ const CanhBaoAndLink = sequelize.define('CanhBaoAndLink', {
         type: DataTypes.DOUBLE,
         defaultValue: 1.5
     },
+    tpslValue:{
+        type:DataTypes.INTEGER,
+        default:0
+    },
     canhBao1Id: {
         type: DataTypes.INTEGER,
         // allowNull: false,  // Tùy chọn, có thể không cho phép null
@@ -569,17 +573,39 @@ app.post('/newMode/1reverseTrendSignal', async (req, res) => {
         res.status(500).send({ success: false, message: 'Internal server error', error: error });
     }
 });
-let tp=1,sl=1,rateTPSL=1.5;
 app.post('/newMode/tp', async (req, res) => {
     let value = req.body.value;
+    let index = req.body.index;
     value=Math.trunc(value)
     if (!value) {
         return res.status(400).send({ success: false, message: 'Missing "value" in the query parameters.' });
     }
+    if (!index) {
+        return res.status(400).send({ success: false, message: 'Missing "index" in the query parameters.' });
+    }
     console.log("receive value:" +value);
-    value=value*10;
-    tp=1.5*value;
-    sl=value;
+     console.log("receive index:" +index);
+     try {
+        const updatedCanhBaoAndLink = await CanhBaoAndLink.findByPk(index, {
+            include: [{ model: linkSchema,as: 'Link' }]
+        });
+
+        if (!updatedCanhBaoAndLink) {
+            return res.status(404).json({ success: false, message: 'CanhBaoAndLink not found' });
+        }
+
+        await updatedCanhBaoAndLink.update({
+            tpslValue: value*10,
+            lastUpdate: Date.now()
+        });
+
+        await updatedCanhBaoAndLink.reload();
+        res.status(200).json({ success: true, message: 'tpsl Value updated successfully', data: updatedCanhBaoAndLink.toJSON() });
+        notifyClient();
+    } catch (error) {
+        console.error('Lỗi khi cập nhật tpsl value:', error);
+        res.status(500).json({ success: false, message: 'Error updating tpsl value', error: error });
+    } 
     return res.status(200).send({ success: true, message: 'receive value '+value });
 })
 app.post('/newMode/1', async (req, res) => {
@@ -627,10 +653,12 @@ app.post('/newMode/1', async (req, res) => {
                 return res.status(404).send({ success: false, message: `wait for trend first` });
             }
             const currentState = canhBao1.state;
+
             if (currentState === "buy" && message === "buy") {
                 var myString=req.body.content;  
                 console.log("myString req.body: "+myString)  ;
-
+                var tp=record.tpslValue*record.tpslRate,sl=record.tpslValue;
+    
 // 2. Split the "content" property by ","
                 let myArray = myString.split(',');
                 let n=myArray.length;
@@ -648,7 +676,7 @@ app.post('/newMode/1', async (req, res) => {
             if (currentState === "sell" && message === "sell") {
                 var myString=req.body.content;  
                 console.log("myString req.body: "+myString)  ;
-
+                var tp=record.tpslValue*record.tpslRate,sl=record.tpslValue;
 // 2. Split the "content" property by ","
                 let myArray = myString.split(',');
                 let n=myArray.length;
