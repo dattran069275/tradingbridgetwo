@@ -630,7 +630,7 @@ app.get('/checkTpValue',async(req,res)=>{
     } 
 })
 app.get('/testApiCart', async (req, res) => {
-  return [
+  res.status(200).send([
     {
       productId: 101,
       name: "Điện thoại Samsung Galaxy A54"
@@ -643,8 +643,9 @@ app.get('/testApiCart', async (req, res) => {
       productId: 303,
       name: "Cáp sạc Type-C Anker"
     }
-  ];
+  ]);
 });
+
 
 app.post('/newMode/1', async (req, res) => {
     let CanhBaoName = req.query.name;
