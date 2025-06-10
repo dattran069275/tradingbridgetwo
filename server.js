@@ -629,6 +629,23 @@ app.get('/checkTpValue',async(req,res)=>{
         res.status(500).json({ success: false, message: 'Lỗi khi search tpsl value', error: error });
     } 
 })
+app.get('/testApiCart', async (req, res) => {
+  return [
+    {
+      productId: 101,
+      name: "Điện thoại Samsung Galaxy A54"
+    },
+    {
+      productId: 202,
+      name: "Tai nghe Bluetooth Xiaomi"
+    },
+    {
+      productId: 303,
+      name: "Cáp sạc Type-C Anker"
+    }
+  ];
+});
+
 app.post('/newMode/1', async (req, res) => {
     let CanhBaoName = req.query.name;
     let message = req.query.message;
