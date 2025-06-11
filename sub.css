@@ -1,0 +1,50 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+button {
+    padding: 5px 10px;
+    margin: 5px;
+}
+.change-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+.remove-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+#alert-form {
+    display: none;  /* Ẩn form ban đầu */
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    width: 300px;
+  }
+  #alert-form label, #alert-form input, #alert-form button {
+    display: block;  /* Đặt các phần tử trên dòng mới */
+    margin-bottom: 10px;
+  }
+  #alert-form input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+  }
+  .button-group {
+    display: flex;
+    justify-content: space-between;  /* Căn chỉnh nút Lưu và Hủy */
+  }
+  input[type="text"] {
+    width: 100%;          /* Chiếm toàn bộ chiều rộng của cột */
+    box-sizing: border-box; /* Đảm bảo padding và border không làm thay đổi chiều rộng */
+    padding: 5px;
+    border: 1px solid #ccc; /* Đường viền */
+  }
